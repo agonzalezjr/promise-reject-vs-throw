@@ -24,3 +24,5 @@ cd promise-reject-vs-throw
 npm i
 node index.js
 ```
+
+![](out.png)

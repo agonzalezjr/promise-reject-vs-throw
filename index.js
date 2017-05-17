@@ -42,7 +42,10 @@ function log(msg, color) {
 const resolved  = (msg, indent) => log((indent ? indent : '') + '(Rs) ' + msg, chalk.green);
 const rejected  = (msg, indent) => log((indent ? indent : '') + '(Rj) ' + msg, chalk.yellow);
 const exception = (msg, indent) => log((indent ? indent : '') + '(Ex) ' + msg, chalk.bgRed);
-
+const test = (msg) => {
+  log(msg, chalk.magenta);
+  return Promise.resolve();
+};
 // The tests ...
 
 function NotAPromise() {
@@ -118,84 +121,96 @@ function NotAPromiseTest(notPromise, indent) {
   }
 }
 
-// Note that these are not guarantee to run in this order!
+// Note that these are not guaranteed to run in order!
 
 
+// test('launch separate').then(() => {
 // PromiseTest(AlwaysResolveInPromise);
 // PromiseTest(AlwaysRejectInPromise);
 // PromiseTest(AlwaysThrowInPromise);
+// });
 
 
+// test('scalars').then(() => {
 // NotAPromiseTest(NotAPromise);
 // NotAPromiseTest(AlwaysThrow);
+// });
 
 
+// test('forgot to catch').then(() => {
 // PromiseTestNoCatch(AlwaysResolveInPromise);
 // // Again: the catch in try-catch is not used here. Error is:
 // // UnhandledPromiseRejectionWarning: message
 // // PromiseTestNoCatch(AlwaysRejectInPromise);
 // // PromiseTestNoCatch(AlwaysThrowInPromise);
+// });
 
 
 // // resolve-then-reject-then-resolve
+// test('sequential with reject in the middle').then(() => {
 // PromiseTest(AlwaysResolveInPromise).then(() => {
 //   PromiseTest(AlwaysRejectInPromise).then(() => {
 //     PromiseTest(AlwaysResolveInPromise);
 //   });
 // });
+// });
 
 
 // // resolve-then-throw-then-resolve
+// test('sequential with throw in the middle').then(() => {
 // PromiseTest(AlwaysResolveInPromise).then(() => {
 //   PromiseTest(AlwaysThrowInPromise).then(() => {
 //     PromiseTest(AlwaysResolveInPromise);
 //   });
 // });
+// });
 
 
 // // all [resolve-reject-resolve-resolve]
+// test('all with reject swallowed').then(() => {
 // PromiseTest(Promise.all([PromiseTest(AlwaysResolveInPromise, '  '), 
 //                          PromiseTest(AlwaysRejectInPromise, '  '),
 //                          PromiseTest(AlwaysResolveInPromise, '  '),
 //                          PromiseTest(AlwaysResolveInPromise, '  '),
 //                         ]));
+// });
 
 
 // // all [resolve-throw-resolve-resolve]
+// test('all with throw swallowed').then(() => {
 // PromiseTest(Promise.all([PromiseTest(AlwaysResolveInPromise, '  '), 
 //                          PromiseTest(AlwaysThrowInPromise, '  '),
 //                          PromiseTest(AlwaysResolveInPromise, '  '),
 //                          PromiseTest(AlwaysResolveInPromise, '  '),
 //                         ]));
+// });
 
 
 // all [resolve-scalar-reject-resolve]
+test('all swallowing a rejection').then(() => {
 PromiseTest(Promise.all([PromiseTest(AlwaysResolveInPromise, '  '), 
                          NotAPromiseTest(NotAPromise, '  '),
                          PromiseTest(AlwaysRejectInPromise, '  '),
                          PromiseTest(AlwaysResolveInPromise, '  '),
                         ]));
-
-
-// // all [resolve-throw-resolve-resolve]
-// PromiseTest(Promise.all([PromiseTest(AlwaysResolveInPromise, '  '), 
-//                          NotAPromiseTest(AlwaysThrow, '  '),
-//                          PromiseTest(AlwaysResolveInPromise, '  '),
-//                          PromiseTest(AlwaysResolveInPromise, '  '),
-//                         ]));
+});
 
 
 // // all [resolve-reject-resolve-resolve] no swallow
+// test('all without swallowing').then(() => {
 // PromiseTest(Promise.all([PromiseTestNoCatch(AlwaysResolveInPromise, '  '), 
 //                          PromiseTestNoCatch(AlwaysRejectInPromise, '  '),
 //                          PromiseTestNoCatch(AlwaysResolveInPromise, '  '),
 //                          PromiseTestNoCatch(AlwaysResolveInPromise, '  '),
 //                         ]));
+// });
 
 
 // // race [resolve-throw-resolve-resolve]
 // // They are all run, but only the first to complete returns
+// test('race').then(() => {
 // PromiseTest(Promise.race([PromiseTestNoCatch(AlwaysThrowInPromise, '  '),
 //                           PromiseTestNoCatch(AlwaysResolveInPromise, '  '),
 //                           PromiseTestNoCatch(AlwaysResolveInPromise, '  '),
 //                         ]));
+// });
