@@ -10,9 +10,9 @@ Some subtleties ... (this is my favorite answer): http://stackoverflow.com/quest
 
 The other big differences are:
 
-# when more code follows either statement: throw immediately completes the resolver function, while calling reject continues execution normally - after having "marked" the promise as rejected.
+1. **when more code follows either statement: throw immediately completes the resolver function, while calling reject continues execution normally - after having "marked" the promise as rejected.**
 
-# do not add catch() everywhere. They will resolve everything. For example: if you have several promises inside an all() and they "catch themselves", then the all() will never be rejected. So, make sure you really want to "swallow the rejection".
+2. **do not add catch() everywhere. They will resolve everything. For example: if you have several promises inside an all() and they "catch themselves", then the all() will never be rejected. So, make sure you really want to "swallow the rejection".**
 
 All this is great, but:
 
