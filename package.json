@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^1.1.3",
-    "console-timestamp": "^0.3.0",
-    "timestamp": "0.0.1"
+    "console-timestamp": "^0.3.0"
   }
 }
